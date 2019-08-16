@@ -6,20 +6,21 @@ RUN apk --no-cache add curl ca-certificates \
 RUN mkdir -p /home/app
 WORKDIR /home/app
 
-COPY function/package.json ./
-COPY function/yarn.lock ./
-RUN yarn install
+COPY function/package.json function/package-lock.json ./
+RUN npm install
 
 # COPY function files and folders
 COPY function/ ./
 
-RUN yarn run lint \
-    && yarn run test --coverage \
-    && yarn run build
+ENV NODE_ENV=production
+
+RUN npm run lint \
+    && npm run test --coverage \
+    && npm run build
 
 RUN chown app:app -R /home/app \
     && chmod 777 /tmp
 
 USER app
 
-CMD ["yarn", "start:prod"]
+CMD ["npm", "run", "start:prod"]
