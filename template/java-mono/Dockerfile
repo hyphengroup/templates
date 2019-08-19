@@ -10,6 +10,8 @@ RUN find . -type f -name "*.jar" -exec cp {} /out \;
 
 FROM openjdk:11-alpine
 
-COPY --from=builder /out ./
+ARG JARFILE
 
-CMD ["java", "-version"]
+COPY --from=builder /out/$JARFILE ./app.jar
+
+CMD ["java", "app.jar"]
