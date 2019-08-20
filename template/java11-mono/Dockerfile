@@ -9,6 +9,6 @@ RUN mvn package $MVN_OPTS
 FROM openjdk:11-jre-slim
 ARG JARFILE
 
-COPY --from=builder $JARFILE ./app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-CMD ["java", "-jar", "app.jar"]
+COPY --from=builder $JARFILE ./app.jar
