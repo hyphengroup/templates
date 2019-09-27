@@ -6,21 +6,21 @@ RUN apk --no-cache add curl ca-certificates \
 RUN mkdir -p /home/app
 WORKDIR /home/app
 
-COPY function/package.json function/package-lock.json ./
+COPY service/package.json service/package-lock.json ./
 RUN npm install
 
-# COPY function files and folders
-COPY function/ ./
+# COPY service files and folders
+COPY service/ ./
 
 ENV NODE_ENV=production
 
-RUN npm run lint \
-    && npm run test --coverage \
-    && npm run build
+# RUN npm run lint \
+#     && npm run test --coverage \
+#     && npm run build
 
 RUN chown app:app -R /home/app \
     && chmod 777 /tmp
 
 USER app
 
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]

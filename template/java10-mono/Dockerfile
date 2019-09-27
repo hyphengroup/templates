@@ -1,8 +1,8 @@
 FROM maven:3.6-jdk-10 as builder
 ARG MVN_OPTS
 
-# COPY function files and folders
-COPY function/ ./
+# COPY service files and folders
+COPY service/ ./
 
 RUN mvn package $MVN_OPTS
 
