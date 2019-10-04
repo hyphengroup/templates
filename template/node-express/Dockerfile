@@ -1,4 +1,4 @@
-FROM node:10.13.0-alpine as builder
+FROM node:lts as builder
 
 RUN apk --no-cache add curl ca-certificates \
     && addgroup -S app && adduser -S -g app app
