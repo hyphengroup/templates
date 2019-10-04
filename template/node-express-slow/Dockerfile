@@ -1,6 +1,6 @@
 FROM node:lts as builder
 
-RUN addgroup app && adduser app app
+RUN addgroup --system app && adduser --system --ingroup app app
 
 RUN mkdir -p /home/app
 WORKDIR /home/app
