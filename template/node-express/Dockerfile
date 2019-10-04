@@ -11,6 +11,12 @@ RUN npm install
 # COPY service files and folders
 COPY service/ ./
 
+ARG RAZZLE_MARKET
+ARG RAZZLE_APP_VERSION
+
+ENV RAZZLE_MARKET=${RAZZLE_MARKET}
+ENV RAZZLE_APP_VERSION=${RAZZLE_APP_VERSION}
+
 ENV NODE_ENV=production
 
 # RUN npm run lint \

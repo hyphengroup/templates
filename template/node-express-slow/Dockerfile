@@ -10,6 +10,12 @@ COPY service/package.json service/package-lock.json ./
 # COPY service files and folders
 COPY service/ ./
 
+ARG RAZZLE_MARKET
+ARG RAZZLE_APP_VERSION
+
+ENV RAZZLE_MARKET=${RAZZLE_MARKET}
+ENV RAZZLE_APP_VERSION=${RAZZLE_APP_VERSION}
+
 RUN npm install
 
 ENV NODE_ENV=production
