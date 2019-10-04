@@ -1,7 +1,6 @@
 FROM node:lts as builder
 
-RUN apk --no-cache add curl ca-certificates \
-    && addgroup -S app && adduser -S -g app app
+RUN addgroup -S app && adduser -S -g app app
 
 RUN mkdir -p /home/app
 WORKDIR /home/app
