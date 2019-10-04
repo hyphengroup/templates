@@ -23,4 +23,4 @@ RUN chown app:app -R /home/app \
 
 USER app
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:prod"]
