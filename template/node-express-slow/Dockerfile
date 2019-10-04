@@ -17,6 +17,7 @@ ENV NODE_ENV=production
 # RUN npm run lint \
 #     && npm run test --coverage \
 #     && npm run build
+RUN npm run build
 
 RUN chown app:app -R /home/app \
     && chmod 777 /tmp
