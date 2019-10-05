@@ -1,4 +1,5 @@
-FROM node:lts as builder
+ARG NODE_FROM=node:lts
+FROM ${NODE_FROM} as builder
 
 RUN addgroup --system app && adduser --system --ingroup app app
 

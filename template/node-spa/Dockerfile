@@ -1,4 +1,5 @@
-FROM node:lts as builder
+ARG NODE_FROM=node:lts
+FROM ${NODE_FROM} as builder
 
 COPY service/package.json service/package-lock.json ./
 RUN npm install

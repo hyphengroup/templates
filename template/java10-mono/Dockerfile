@@ -1,4 +1,5 @@
-FROM maven:3.6-jdk-10 as builder
+ARG MAVEN_FROM=maven:3.6-jdk-10
+FROM ${MAVEN_FROM} as builder
 ARG MVN_OPTS
 
 # COPY service files and folders

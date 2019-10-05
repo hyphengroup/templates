@@ -1,4 +1,5 @@
-FROM node:lts
+ARG NODE_FROM=node:lts
+FROM ${NODE_FROM}
 
 ENV NODE_ENV=production
 
