@@ -14,6 +14,6 @@ FROM node:lts
 RUN npm install -g serve
 
 # COPY service files and folders
-COPY --from=builder build /
+COPY --from=builder build/ ./build
 
 CMD ["serve", "-s", "-l", "80", "build"]
