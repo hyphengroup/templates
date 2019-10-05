@@ -9,9 +9,11 @@ COPY service/ ./
 ENV NODE_ENV=production
 RUN npm run build
 
-FROM nginx:alpine
+FROM node:lts
 
-RUN apk --no-cache add curl ca-certificates
+RUN npm install -g serve
 
 # COPY service files and folders
-COPY --from=builder build/ /usr/share/nginx/html
+COPY --from=builder build /
+
+RUN ["serve", "-s", "-l", "80", "build"]
