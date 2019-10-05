@@ -16,5 +16,4 @@ RUN npm install -g serve
 # COPY service files and folders
 COPY --from=builder build /
 
-ENTRYPOINT ["serve", "-s", "-l", "80"]
-CMD "build"
+CMD ["serve", "-s", "-l", "80", "build"]
