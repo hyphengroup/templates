@@ -1,6 +1,5 @@
 ARG NODE_FROM=node:lts
 ARG NGINX_FROM=nginx:stable
-ARG BUILD_PATH=/build/
 
 FROM ${NODE_FROM} as builder
 
@@ -9,11 +8,16 @@ RUN npm install
 
 # COPY service files and folders
 COPY service/ ./
+ARG BUILD_PATH=/build
 
 RUN npm run build
 
+RUN mkdir -p /static-html \
+    && cp -R ${BUILD_PATH}/* /static-html/
+
 FROM ${NGINX_FROM}
 
-COPY --from=builder ${BUILD_PATH} /usr/share/nginx/html
+# https://github.com/moby/moby/issues/34482
+COPY --from=builder /static-html/ /usr/share/nginx/html/
 
 EXPOSE 80
