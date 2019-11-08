@@ -2,6 +2,9 @@ ARG MAVEN_FROM=maven:3.6
 FROM ${MAVEN_FROM} as builder
 ARG MVN_OPTS
 
+COPY service/pom.xml ./pom.xml
+RUN mvn dependency:go-offline -fn $MVN_OPTS
+
 # COPY service files and folders
 COPY service/ ./
 
