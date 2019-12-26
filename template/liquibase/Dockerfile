@@ -1,4 +1,4 @@
-ARG LIQUIBASE_FROM=chriskolenko/liquibase:0.1.1
+ARG LIQUIBASE_FROM=chriskolenko/liquibase:0.1.2
 FROM ${LIQUIBASE_FROM}
 
 ENV LIQUIBASE_CHANGELOG=/liquibase/workspace/changelog.xml
