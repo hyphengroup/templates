@@ -6,4 +6,4 @@ ENV LIQUIBASE_CHANGELOG=/liquibase/workspace/changelog.xml
 # COPY service files and folders
 COPY service/ /liquibase/workspace
 
-CMD ["liquibase ", "update"]
+CMD ["liquibase", "update"]
