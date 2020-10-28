@@ -8,14 +8,14 @@ COPY package-lock.json .
 COPY lerna.json .
 RUN npm install
 
-COPY function/package.json function/
-COPY function/package*.json function/
+COPY service/package.json service/
+COPY service/package*.json service/
 
 RUN npm run bootstrap
 
 COPY . .
 
-RUN npm --prefix /app/function run build
+RUN npm --prefix /app/service run build
 
 ENV NODE_ENV=production
 RUN npm prune
