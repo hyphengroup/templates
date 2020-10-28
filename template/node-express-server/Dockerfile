@@ -1,7 +1,16 @@
-FROM node:lts-alpine
+ARG BASE=node:lts-alpine
+FROM $BASE
+ARG SSH_KEY
+ENV SSH_KEY=$SSH_KEY
 
 RUN mkdir -p /app
 WORKDIR /app
+
+RUN apk add --no-cache openssh-client git \
+  && mkdir ~/.ssh \
+  && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
+
+RUN echo $SSH_KEY | base64 -d > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 
 COPY package.json .
 COPY package-lock.json .
