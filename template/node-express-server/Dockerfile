@@ -1,5 +1,4 @@
-ARG BASE=node:lts-alpine
-FROM $BASE
+FROM node:lts as base
 ARG SSH_KEY
 ENV SSH_KEY=$SSH_KEY
 
@@ -10,7 +9,7 @@ RUN apk add --no-cache openssh-client git \
   && mkdir ~/.ssh \
   && ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
 
-RUN echo $SSH_KEY | base64 -d > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+RUN echo -n $SSH_KEY | base64 -d > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 
 COPY package.json .
 COPY package-lock.json .
@@ -29,6 +28,12 @@ RUN npm --prefix /app/service run build
 ENV NODE_ENV=production
 RUN npm prune
 
+FROM node:lts-alpine
+
+RUN mkdir -p /app
+WORKDIR /app
+
+COPY --from=base /app/service /app/service 
 
 EXPOSE 8080/TCP
 EXPOSE 8081/TCP
