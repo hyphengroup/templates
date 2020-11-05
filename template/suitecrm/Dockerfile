@@ -1,7 +1,31 @@
+FROM php:7.2.30-apache AS basebase
+
+# add from a tgz does not support --chown so pull into temp image layer
+# so can copy later and save a lot cost
+# ARG SUITECRM_MODULE_TARBALL=service/base_suitecrm.tgz
+ADD service/*.tgz /bob
+
+# these should be mounted via a secret in k8 
+
+COPY service/ /bob
+RUN rm /bob/*.tgz
+
+ARG BUILD_TYPE=RELEASE
+RUN if [ "$BUILD_TYPE" = "EDIT" ]; then cd /bob/Api/V8/OAuth2 \
+  && openssl genrsa -out private.key 2048 \
+  && openssl rsa -in private.key -pubout -out public.key \
+  && chmod 600 private.key public.key \
+  && chown $USER:www-data p*.key ; else \
+# to stop someone menting a token outside prod and using it with prod server the two keys can be mounted via a secret, requried to use V8 of suite api
+# will need https://github.com/kubernetes/kubernetes/issues/81089 for this without work around as we are not uid 0 and secret mounts are always uid0
+  ln -s /secret/OAuth2/public /bob/Api/V8/OAuth2/public.key \
+  && ln -s /secret/OAuth2/private /bob/Api/V8/OAuth2/private.key \
+   ; fi
+RUN if [ "$BUILD_TYPE" = "EDIT" ]; then echo KEEPING modulebuilder do not release this image ; else rm -rf /bob/custom/modulebuilder/packages/* ; fi
+
+# any changes to permissions etc should be done here before
+
 FROM php:7.2.30-apache
-ARG USER=suitecrm
-ENV APACHE_RUN_USER=${USER}
-ENV APACHE_RUN_GROUP=${USER}
 
 RUN apt-get update \ 
   && apt-get install -y --no-install-recommends \
@@ -24,15 +48,12 @@ RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
 RUN touch /usr/local/etc/php/conf.d/uploads.ini \
     && echo "upload_max_filesize = 50M;" >> /usr/local/etc/php/conf.d/uploads.ini
 
-RUN groupadd -g 1000 $USER
-RUN useradd -r -u 1000 -g $USER $USER
+ARG USER=www-data
+ARG UID=1000
+RUN groupadd -f -g 1000 $USER
+RUN id -u $USER || useradd -r -u $UID -g $USER -G www-data $USER
 
+COPY --chown=$USER:www-data --from=basebase /bob .
 
-# COPY service files and folders
-COPY service/ ./
-
-RUN mkdir -p /tmp/cache /tmp/sessions /tmp/logs
-RUN chown -R $USER:$USER /tmp/cache /tmp/sessions /tmp/logs
-RUN chown -R $USER:$USER . \
-  && chmod -R 755 . \
-  && chmod -R 775 cache custom modules themes data upload 
+RUN mkdir -p /tmp/cache /tmp/sessions /tmp/logs cache custom/history/modules \
+  && chown -R $USER:www-data /tmp/cache /tmp/sessions /tmp/logs cache 
