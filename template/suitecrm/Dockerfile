@@ -55,5 +55,5 @@ RUN id -u $USER || useradd -r -u $UID -g $USER -G www-data $USER
 
 COPY --chown=$USER:www-data --from=basebase /bob .
 
-RUN bash -c "mkdir -p /tmp/cache /tmp/sessions /tmp/logs cache custom/history/modules"
-RUN bash -c "chown -R $USER:www-data /tmp/cache /tmp/sessions /tmp/logs cache && echo hello"
+RUN bash -c "mkdir -p /var/suitecrm/cache /var/suitecrm/sessions /var/suitecrm/logs cache custom/history/modules"
+RUN bash -c "chown -R $USER:www-data /var/suitecrm/cache /var/suitecrm/sessions /var/suitecrm/logs cache"
