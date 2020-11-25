@@ -54,6 +54,9 @@ RUN groupadd -f -g 1000 $USER
 RUN id -u $USER || useradd -r -u $UID -g $USER -G www-data $USER
 
 COPY --chown=$USER:www-data --from=basebase /bob .
-
+ 
+RUN bash -c "mv /var/www/html/docker-entrypoint.sh /usr/local/bin && chmod +x /usr/local/bin/docker-entrypoint.sh"
 RUN bash -c "mkdir -p /var/suitecrm/cache /var/suitecrm/sessions /var/suitecrm/logs cache custom/history/modules"
 RUN bash -c "chown -R $USER:www-data /var/suitecrm/cache /var/suitecrm/sessions /var/suitecrm/logs cache"
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
