@@ -10,7 +10,7 @@ RUN yarn
 COPY service/ ./
 ARG BUILD_PATH=/build
 
-RUN yarn build
+RUN yarn build:docs
 
 RUN mkdir -p /static-html \
     && cp -R ${BUILD_PATH}/* /static-html/
