@@ -3,13 +3,18 @@ ARG NGINX_FROM=nginx:stable
 
 FROM ${NODE_FROM} as builder
 
-COPY service/package.json service/yarn.lock rollup.config.js ./
-RUN yarn
+COPY service/package.json service/yarn.lock ./
+
+# Set the flag so that we skip the `prepare` script in package.json
+# Then install dependencies with yarn
+RUN export SKIP_CAG_COMPONENTS_PREPARE_SCRIPT=true \
+    && yarn
 
 # COPY service files and folders
 COPY service/ ./
 ARG BUILD_PATH=/build
 
+# Generate Storybook static HTML files
 RUN yarn build:docs
 
 RUN mkdir -p /static-html \
