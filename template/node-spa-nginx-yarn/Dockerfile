@@ -3,8 +3,8 @@ ARG NGINX_FROM=nginx:stable
 
 FROM ${NODE_FROM} as builder
 
-COPY service/package.json service/yarn.lock rollup.config.js ./
-RUN yarn
+COPY service/package.json service/yarn.lock ./
+RUN yarn 
 
 # COPY service files and folders
 COPY service/ ./
